@@ -6,4 +6,4 @@ resources:
   - service.yaml
 images:
   - name: docker.io/insignficant/ansible-vue
-    newTag: docker.io/insignficant/ansible-vue:0.0.11 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
+    newTag: 0.0.9 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
