@@ -9,4 +9,4 @@ resources:
 
 images:
   - name: docker.io/insignficant/ansible-vue
-    newTag: 0.0.9
+    newTag: 0.0.9 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
