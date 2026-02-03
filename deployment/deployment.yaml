@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: ansvue
-        image: docker.io/insignficant/ansible-vue # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
+        image: docker.io/insignficant/ansible-vue:0.0.11 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
