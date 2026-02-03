@@ -10,22 +10,23 @@ This directory contains Kubernetes manifests for deploying the Ansvue Vue.js app
 
 ## Files
 
-- `deployment.yaml` - Defines the Deployment resource with 2 replicas
+- `deployment.yaml` - Defines the Deployment resource with 1 replica
 - `service.yaml` - Defines a ClusterIP Service to expose the application
 - `kustomization.yaml` - Kustomize configuration for managing the resources
+- `redeploy.sh` - Script to clean up and redeploy (useful for fixing configuration issues)
 
 ## Deployment Configuration
 
 The deployment includes:
-- **Replicas**: 2 pods for high availability
-- **Image**: `ansvue:latest` (can be customized via kustomization)
-- **Port**: 80 (nginx serves the Vue.js app)
+- **Replicas**: 1 pod
+- **Image**: `insignficant/ansible-vue:latest` (can be customized via kustomization)
+- **Port**: 5173 (Vite dev server port)
 - **Resources**: 
   - Requests: 64Mi memory, 50m CPU
   - Limits: 128Mi memory, 100m CPU
 - **Health Checks**:
-  - Liveness probe: HTTP GET on `/` every 10 seconds
-  - Readiness probe: HTTP GET on `/` every 5 seconds
+  - Liveness probe: HTTP GET on `/` on port 5173 every 10 seconds
+  - Readiness probe: HTTP GET on `/` on port 5173 every 5 seconds
 
 ## Deployment Methods
 
@@ -47,8 +48,23 @@ kubectl apply -f deployment/
 kubectl apply -k deployment/
 
 # To customize the image tag, edit kustomization.yaml or use:
-kubectl apply -k deployment/ --image=ansvue:v1.0.0
+kubectl apply -k deployment/ --image=insignficant/ansible-vue:latest
 ```
+
+### Method 3: Using the redeploy script (for fixing configuration issues)
+
+If you encounter duplicate port name errors or other configuration conflicts, use the redeploy script:
+
+```bash
+cd deployment/
+./redeploy.sh
+```
+
+This script will:
+1. Delete the existing deployment and service
+2. Wait for cleanup to complete
+3. Apply the new configuration
+4. Show the deployment status
 
 ## Accessing the Application
 
@@ -56,7 +72,7 @@ kubectl apply -k deployment/ --image=ansvue:v1.0.0
 
 ```bash
 # Forward local port 8080 to the service
-kubectl port-forward service/ansvue 8080:80
+kubectl port-forward service/ansvue 8080:5173
 
 # Access at http://localhost:8080
 ```
@@ -116,3 +132,67 @@ Then update the image reference in `kustomization.yaml` or use:
 ```bash
 kubectl set image deployment/ansvue ansvue=your-registry.com/ansvue:latest
 ```
+
+## Troubleshooting
+
+### Duplicate Port Name Error
+
+If you encounter an error like:
+```
+Service "ansvue" is invalid: spec.ports[1].name: Duplicate value: "http"
+```
+
+This typically happens when there's an existing deployment/service with a different configuration. To fix this:
+
+**Option 1: Use the redeploy script**
+```bash
+cd deployment/
+./redeploy.sh
+```
+
+**Option 2: Manually delete and redeploy**
+```bash
+# Delete existing resources
+kubectl delete deployment ansvue -n default
+kubectl delete service ansvue -n default
+
+# Wait a few seconds for cleanup
+sleep 2
+
+# Apply the new configuration
+kubectl apply -k deployment/
+```
+
+**Option 3: Check current configuration**
+```bash
+# View the current deployment configuration
+kubectl get deployment ansvue -n default -o yaml
+
+# View the current service configuration
+kubectl get service ansvue -n default -o yaml
+```
+
+### Pods Not Starting
+
+If pods are not starting or are in CrashLoopBackOff:
+
+```bash
+# Check pod status
+kubectl get pods -l app=ansvue
+
+# View pod logs
+kubectl logs -l app=ansvue --tail=50
+
+# Describe pod for detailed events
+kubectl describe pod -l app=ansvue
+```
+
+### Port Mismatch Issues
+
+If you see errors related to port mismatches between the container port and probe ports, ensure that:
+- The container port in `deployment.yaml` matches the port your application listens on
+- The liveness and readiness probes use the same port as the container port
+
+For this application, the correct configuration is:
+- Container port: 5173
+- Probe port: 5173
