@@ -27,3 +27,7 @@ logs:
 monit:
     @echo "Monitoring PM2 processes"
     pm2 monit
+
+install: 
+    @echo "Installing dependencies"
+    npm install
