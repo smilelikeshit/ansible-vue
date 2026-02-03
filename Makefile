@@ -2,7 +2,7 @@
 
 start:
 	@echo "Starting the application with PM2"
-	pm2 start "npm run dev" --name ansvue
+	pm2 start ecosystem.config.cjs --name ansvue
 
 stop:
 	@echo "Stopping the application with PM2"
