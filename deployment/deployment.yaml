@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: ansvue
-        image: insignficant/ansible-vue:latest
+        image: docker.io/insignficant/ansible-vue:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5173
