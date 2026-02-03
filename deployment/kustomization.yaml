@@ -8,5 +8,5 @@ resources:
   - service.yaml
 
 images:
-  - name: docker.io/insignficant/ansible-vue:latest
-    newTag: v0.0.8
+  - name: docker.io/insignficant/ansible-vue
+    newTag: 0.0.9
