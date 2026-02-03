@@ -1,9 +1,9 @@
 name: Build and Push to Docker Hub
 
 on:
-  push:
-    branches:
-      - main
+  push: 
+    tags:
+      - '*'
 
 jobs:
   build-and-push:
@@ -30,6 +30,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
+            type=ref,event=${{ github.ref_name }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha
