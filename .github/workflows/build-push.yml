@@ -16,7 +16,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: all # This installs static binaries for all supported architectures
+          platforms: amd64 # This installs static binaries for all supported architectures
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -43,6 +43,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
+          platforms: linux/amd64,linux/arm64
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
