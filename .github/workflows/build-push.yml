@@ -1,12 +1,8 @@
-name: Build and Push to Docker Hub
+name: Build and Push Docker Image
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published, created]
 
 jobs:
   build-and-push:
