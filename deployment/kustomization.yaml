@@ -4,6 +4,8 @@ namespace: default
 resources:
   - deployment.yaml
   - service.yaml
+  - hpa.yaml
+  - ingress.yaml
 images:
   - name: docker.io/insignficant/ansible-vue
-    newTag: docker.io/insignficant/ansible-vue:0.0.12 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
+    newTag: 0.0.11 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
