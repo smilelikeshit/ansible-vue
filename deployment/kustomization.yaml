@@ -8,4 +8,4 @@ resources:
   - ingress.yaml
 images:
   - name: docker.io/insignficant/ansible-vue
-    newTag: 0.0.11 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
+    newTag: docker.io/insignficant/ansible-vue:0.0.12 # {"$imagepolicy": "fluxcd:ansible-vue-policy"}
